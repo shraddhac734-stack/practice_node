@@ -18,7 +18,7 @@ class userController {
   };
   getUserByUserId=async (req, res, next) => {
     try {
-        const result =await userService.getUserByUserId(req?.params?.userId);
+        const result =await userService.getUserById(req.params.id);
         return Response.success(
         result.body,
         "User Find Successfully",

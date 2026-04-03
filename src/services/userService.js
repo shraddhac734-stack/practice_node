@@ -1,18 +1,37 @@
 const UserRepository = require("../repositories/userRepo");
-const bcrypt = require("bcrypt")
-const Response = require("../utils/response")
+const bcrypt = require("bcrypt");
+const messageConstant = require("../constant/messageConstant");
+const {userSchema}=require("../validators/auth_validators")
 class userService {
   // Create User
   async addUser(data) {
-    const { email, name, password } = data;
-    if (!name || !email || !password) {
-      throw new Error("All fields are required");
+    // const { email, name, password } = data || {} // || ?? !!
+    // if (!name || !email || !password) {
+    //  return (messageConstant.INVALID_REQUEST);
+    // }
+    const result =userSchema.safeParse(data);
+    console.log(data);
+    if(!result.success){
+      throw new Error(messageConstant.INVALID_REQUEST);
     }
+    // Get validated data
+       const validatedData = result.data;
     //password becrypt
-    data.password=await bcrypt.hash(password,10);
+    validatedData.password = await bcrypt.hash(validatedData.password, 10);
 
     // store data into and return it
-    return await UserRepository.addUser(data);
+    return await UserRepository.addUser(validatedData);
+  }
+  //GetUserById
+  async getUserById(id) {
+    if (!id) {
+      throw new Error(messageConstant.INVALID_REQUEST);
+    }
+    const user = await UserRepository.getUserById(id);
+    if (!user) {
+      throw new Error(messageConstant.NOT_FOUND);
+    }
+    return user;
   }
 }
 module.exports = new userService();
