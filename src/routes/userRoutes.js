@@ -4,5 +4,5 @@ const userController = require("../controllers/userController");
 
 
 router.post("/add", userController.addUser);
-
+router.get("/list/:userId",userController.getUserByUserId);
 module.exports = router;
