@@ -12,7 +12,12 @@ class userService {
     const result =userSchema.safeParse(data);
     console.log(data);
     if(!result.success){
-      throw new Error(messageConstant.INVALID_REQUEST);
+      //  console.log(userSchema);
+      throw new Error(result.error.issues[0].message);
+      // return Response.error(
+      //     userSchema.error.errors[0].message, 
+      //     400
+        // );
     }
     // Get validated data
        const validatedData = result.data;

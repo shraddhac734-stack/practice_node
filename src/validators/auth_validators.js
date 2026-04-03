@@ -1,20 +1,21 @@
 const { z } = require("zod");
+const messageConstant=require('../constant/messageConstant')
 
 const userSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, { message: "Name must be at least 2 characters" })
-    .max(15, { message: "Name must be at most 15 characters" }),
+    .min(2, { message: messageConstant.ENTER_MIN_CHAR })
+    .max(15, { message: messageConstant.ENTER_MAX_CHAR }),
 
   email: z
     .string()
     .trim()
-    .email({ message: "Please enter a valid email address" }),
+    .email({ message: messageConstant.VALID_EMAIL }),
 
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters" }),
+    .min(6, { message: messageConstant.VALID_PASS }),
 });
 
 module.exports = { userSchema };

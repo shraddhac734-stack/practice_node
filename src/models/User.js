@@ -24,6 +24,20 @@ const User = db.define(
     phone: {
         type: DataTypes.STRING,
         allowNull: true
+    },
+    isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true
+    },
+    softDelete: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
+    createdAt: {
+        type: DataTypes.DATE,
+    },
+    updatedAt: {
+        type: DataTypes.DATE,
     }
 }, )
 module.exports = User;

@@ -14,5 +14,11 @@ const messageConstant = {
   USER_DOES_NOT_EXIST_WITH_THIS_EMAIL: "User does not exist with this email",
   INCORRECT_PASSWORD: "Incorrect password",
   USER_ALREADY_EXISTS_WITH_THIS_EMAIL: "User already exists with this email",
+
+  //VALIDATIORS
+  VALID_EMAIL:"Please enter valid email",
+  VALID_PASS:"Please enter valid password",
+  ENTER_MIN_CHAR:"enter atleast 2 character",
+  ENTER_MAX_CHAR:"enter atleast 15 character"
 };
 module.exports = messageConstant;
