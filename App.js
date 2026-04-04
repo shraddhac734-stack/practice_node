@@ -12,10 +12,7 @@ app.listen(port, () => {
 });
 app.use(express.json()); 
 app.use("/", routes);  
-db.sync()
+db.sync({ force: true })
   .then(() => {
-    console.log("Database Connected");
-  })
-  .catch((err) => {
-    console.error("Connection Failed", err);
-});
+    console.log("Database Recreated");
+  });

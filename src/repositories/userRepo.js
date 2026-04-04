@@ -1,16 +1,39 @@
+// const User = require("../models/User");
+// class userRepository {
+//   // Create User
+//   async addUser(data) {
+//     return await User.create(data);
+//   }
+
+//   //GetUserById
+//   async getUserById(id) {
+//     const User = await User.findOne({
+//       where: { id, softDelete: false },
+//     });
+//     if (!user) return null;
+//   }
+// }
+// module.exports = new userRepository();
+
 const User = require("../models/User");
+
 class userRepository {
+
   // Create User
   async addUser(data) {
     return await User.create(data);
   }
 
-  //GetUserById
+  // Get User By Id
   async getUserById(id) {
-    const User = await User.findOne({
+    const user = await User.findOne({
       where: { id, softDelete: false },
     });
+
     if (!user) return null;
+
+    return user; // ✅ IMPORTANT
   }
 }
+
 module.exports = new userRepository();

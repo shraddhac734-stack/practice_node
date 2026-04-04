@@ -1,3 +1,5 @@
+const messageConstant = require("../constant/messageConstant");
+
 class Response {
   static success(res, message, data = null, statusCode = 200) {
     return res.status(statusCode).json({
@@ -7,7 +9,6 @@ class Response {
       data: data,
     });
   }
-
   static error(res, message, statusCode = 500) {
     return res.status(statusCode).json({
       status: "ERROR",
@@ -18,4 +19,13 @@ class Response {
   }
 }
 
-module.exports = Response;
+function getNotFoundResponse(message = MessageConstant.NO_DATA_FOUND) {
+  return new Response(404, MessageConstant.ERROR, message);
+}
+
+
+function getOkResponse(message) {
+  return new Response(200, MessageConstant.OK, message);
+}
+((module.exports = Response),
+  {getNotFoundResponse, getOkResponse });

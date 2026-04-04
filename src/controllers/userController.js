@@ -1,6 +1,6 @@
-const { response } = require("express");
+// const { response } = require("express");
 const userService = require("../services/userService");
-const Response = require("../utils/response")
+const Response = require("../utils/response");
 const messageConstant = require("../constant/messageConstant")
 class userController {
   // Create User
@@ -14,21 +14,24 @@ class userController {
         201
       );
     } catch (error) {
-      return Response.error(res,error.message);
+      next(error);
+      // return Response.error(res,error.message);
     }
   };
+
   getUserById=async (req, res, next) => {
     try {
         const result =await userService.getUserById(req.params.id);
         return Response.success(
-        result.body,
+        res,      
         messageConstant.USERS_FOUND_SUCCESSFULLY,
+        result,
         201
         );
+        
     } catch (error) {
        console.log("error in getUserById",error);
-       next(error);
-       
+       return Response.error(res,error.message);
     }
   }
 }
