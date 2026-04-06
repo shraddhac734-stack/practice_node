@@ -37,9 +37,6 @@ class userController {
   updateUserById = async (req, res, next) => {
     try {
       const result = await userService.updateUserById(req.params.id,req.body);
-      console.log("ID:",req.params.id);
-      console.log("BODY:",req.body);
-      
       const meta = getUpdatedResponse(messageConstant.USER_UPDATED_SUCCESSFULLY);
       return getGeneralResponse(res,meta,result);
     } catch (error) {

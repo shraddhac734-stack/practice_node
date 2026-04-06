@@ -17,7 +17,7 @@ class userService {
     console.log(data);
     if (!result.success) {
       //  console.log(userSchema);
-      throw new Error(result.error.issues[0].message);
+      throw result.error;
     }
     // Get validated data
     const validatedData = result.data;

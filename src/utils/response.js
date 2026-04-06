@@ -36,6 +36,14 @@ function getGeneralResponse(res, meta, data = null) {
   });
 }
 
+function getErrorResponse(res,meta){
+  return res.status(meta.code).json({
+    status:meta.status,
+    code:meta.code,
+    description:meta.description
+  })
+}
+
 function getNotFoundResponse(message = MessageConstant.NO_DATA_FOUND) {
   return new Response(404, messageConstant.ERROR, message);
 }
@@ -75,6 +83,7 @@ function getInternalServerErrorResponse() {
 module.exports = {
   Response,
   getNotFoundResponse,
+  getErrorResponse,
   getGeneralResponse,
   getOkResponse,
   getCreatedResponse,
