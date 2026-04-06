@@ -21,8 +21,22 @@ class NotFoundException extends BaseError {
         super(message, StatusCodes.NOT_FOUND);
     }
 }
+
+class UnauthoRizedException extends BaseError{
+    constructor (message=MessageConstant.UNAUTHORIZED){
+        super(message,StatusCodes.UNAUTHORIZED);
+    }
+}
+
+class InternalServerException extends BaseError{
+    constructor(message=MessageConstant.INTERNAL_SERVER_ERROR){
+        super(message,StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
 module.exports = {
     BaseError,
     InvalidRequestException,
-    NotFoundException
+    NotFoundException,
+    UnauthoRizedException,
+    InternalServerException
 };

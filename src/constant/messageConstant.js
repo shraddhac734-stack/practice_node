@@ -1,4 +1,14 @@
 const messageConstant = {
+    // RESPONSE
+    SUCCESS: "Success",
+    ERROR: "Error",
+    OK: "OK",
+    CREATED: "CREATED",
+    UPDATED: "UPDATED",
+    DELETED: "DELETED",
+    NO_DATA_FOUND: "No data found",
+    SOMETHING_WENT_WRONG: "Something went wrong, please try again later",
+
   // USER
   USER_ADDED_SUCCESSFULLY: "User Added Successfully",
   USER_UPDATED_SUCCESSFULLY: "User Updated Successfully",
@@ -17,8 +27,16 @@ const messageConstant = {
 
   //VALIDATIORS
   VALID_EMAIL:"Please enter valid email",
-  VALID_PASS:"Please enter valid password",
-  ENTER_MIN_CHAR:"enter atleast 2 character",
-  ENTER_MAX_CHAR:"enter atleast 15 character"
+  EMAIL_REQUIRED:"Please Enter Email",
+  EMAIL_TOO_SHORT:"Email must be atleast 5 character",
+  EMAIL_TOO_LONG:"Email is too long",
+  PASSWORD_REQUIRED:"Enter Password",
+  PASSWORD_TOO_SHORT:"PASSWORD_TOO_SHORT",
+  PASSWORD_TOO_LONG:"PASSWORD_TOO_LONG",
+  NAME_REQUIRED:"Enter Name",
+  NAME_TOO_SHORT:"name is too short",
+  NAME_TOO_LONG:"name is too long ",
+  PHONE_NUMBER_REQUIRED:"Enter phone number",
+  PHONE_NUMBER_MUST_BE_10_DIGITS:"Enter only 10 digit number"
 };
 module.exports = messageConstant;

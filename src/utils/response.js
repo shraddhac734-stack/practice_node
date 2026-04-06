@@ -1,31 +1,86 @@
 const messageConstant = require("../constant/messageConstant");
 
+// class Response {
+//   static success(res, message, data = null, statusCode = 200) {
+//     return res.status(statusCode).json({
+//       status: "SUCCESS",
+//       code: statusCode,
+//       description: message,
+//       data: data,
+//     });
+//   }
+//   static error(res, message, statusCode = 500) {
+//     return res.status(statusCode).json({
+//       status: "ERROR",
+//       code: statusCode,
+//       description: message,
+//       data: null,
+//     });
+//   }
+// }
+
 class Response {
-  static success(res, message, data = null, statusCode = 200) {
-    return res.status(statusCode).json({
-      status: "SUCCESS",
-      code: statusCode,
-      description: message,
-      data: data,
-    });
+  constructor(code, status, description) {
+    this.code = code;
+    this.status = status;
+    this.description = description;
   }
-  static error(res, message, statusCode = 500) {
-    return res.status(statusCode).json({
-      status: "ERROR",
-      code: statusCode,
-      description: message,
-      data: null,
-    });
-  }
+}
+
+function getGeneralResponse(res, meta, data = null) {
+  return res.status(meta.code).json({
+    status: meta.status,
+    code: meta.code,
+    description: meta.description,
+    data: data,
+  });
 }
 
 function getNotFoundResponse(message = MessageConstant.NO_DATA_FOUND) {
-  return new Response(404, MessageConstant.ERROR, message);
+  return new Response(404, messageConstant.ERROR, message);
 }
-
 
 function getOkResponse(message) {
-  return new Response(200, MessageConstant.OK, message);
+  return new Response(200, messageConstant.OK, message);
 }
-((module.exports = Response),
-  {getNotFoundResponse, getOkResponse });
+
+function getCreatedResponse(message) {
+  return new Response(200, messageConstant.CREATED, message);
+}
+
+function getUpdatedResponse(message) {
+  return new Response(200, messageConstant.UPDATED, message);
+}
+
+function getDeletedResponse(message) {
+  return new Response(200, messageConstant.DELETED, message);
+}
+
+function getInvalidRequestResponse(message) {
+  return new Response(400, messageConstant.ERROR, message);
+}
+
+function getUnauthorizeResponse(message) {
+  return new Response(401, messageConstant.ERROR, message);
+}
+
+function getInternalServerErrorResponse() {
+  return new Response(
+    500,
+    messageConstant.ERROR,
+    messageConstant.SOMETHING_WENT_WRONG,
+  );
+}
+
+module.exports = {
+  Response,
+  getNotFoundResponse,
+  getGeneralResponse,
+  getOkResponse,
+  getCreatedResponse,
+  getUpdatedResponse,
+  getDeletedResponse,
+  getInvalidRequestResponse,
+  getUnauthorizeResponse,
+  getInternalServerErrorResponse,
+};

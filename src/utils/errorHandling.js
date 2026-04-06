@@ -1,15 +1,6 @@
-const {
-    getInvalidRequestResponse,
-    getNotFoundResponse,
-    getUnAuthorizeResponse,
-    getInternalServerErrorResponse,
-    getGeneralResponse,
-} = require("../utils/response");
-const {
-    InvalidRequestException,
-    NotFoundException,
-    UnAuthorizeException
-} = require("./exception");
+const {getInvalidRequestResponse,getNotFoundResponse,getUnauthorizeResponse,getInternalServerErrorResponse,getGeneralResponse,}
+ = require("../utils/response");
+const { InvalidRequestException, NotFoundException, UnauthoRizedException} = require("./exception");
 
 module.exports = (err, req, res, next) => {
     console.error("ERROR: ", err);
@@ -32,11 +23,13 @@ module.exports = (err, req, res, next) => {
     }
 
     // Unauthorized
-    if (err instanceof UnAuthorizeException) {
+    if (err instanceof UnauthoRizedException) {
         return getGeneralResponse(
             res,
-            getUnAuthorizeResponse(err.message),
+            getUnauthorizeResponse(err.message),
             null,
         );
     }
+    // Fallback Internal Error
+    return getGeneralResponse(res, getInternalServerErrorResponse(), null);
 };

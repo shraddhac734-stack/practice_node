@@ -1,38 +1,39 @@
-// const { response } = require("express");
 const userService = require("../services/userService");
-const Response = require("../utils/response");
-const messageConstant = require("../constant/messageConstant")
+const { getCreatedResponse, getOkResponse, getGeneralResponse, getUpdatedResponse, getDeletedResponse} = require("../utils/response");
+const messageConstant = require("../constant/messageConstant");
 class userController {
   // Create User
   addUser = async (req, res, next) => {
     try {
       const result = await userService.addUser(req.body);
-      return Response.success(
-        res,
-        messageConstant.USER_ADDED_SUCCESSFULLY,
-        result,
-        201
-      );
+      const meta = getCreatedResponse(messageConstant.USER_ADDED_SUCCESSFULLY);
+      return getGeneralResponse(res, meta, result);
     } catch (error) {
+      console.log("Error in addUser",error);
       next(error);
-      // return Response.error(res,error.message);
     }
   };
 
-  getUserById=async (req, res, next) => {
+  getUserById = async (req, res, next) => {
     try {
-        const result =await userService.getUserById(req.params.id);
-        return Response.success(
-        res,      
-        messageConstant.USERS_FOUND_SUCCESSFULLY,
-        result,
-        201
-        );
-        
+      const result = await userService.getUserById(req.params.id);
+      const meta = getOkResponse(messageConstant.USERS_FOUND_SUCCESSFULLY);
+      return getGeneralResponse(res ,meta,result);
     } catch (error) {
-       console.log("error in getUserById",error);
-       return Response.error(res,error.message);
+      console.log("error in getUserById", error);
+      next(error);
     }
-  }
+  };
+
+  updateUserById = async (req, res, next) => {
+    try {
+      const result = await userService.updateUserById(req.params.id);
+      const meta = getUpdatedResponse(messageConstant.USER_UPDATED_SUCCESSFULLY);
+      return getGeneralResponse(res,meta,result);
+    } catch (error) {
+      console.log("error in updateUserById", error);
+      next(error);
+    }
+  };
 }
 module.exports = new userController();

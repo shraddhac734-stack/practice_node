@@ -1,5 +1,6 @@
 const express = require("express");
 const routes = require("./src/routes/index");
+const errors=require("./src/utils/errorHandling")
 const db=require('./src/configs/dbConfig')
 require("dotenv").config();
 
@@ -12,7 +13,8 @@ app.listen(port, () => {
 });
 app.use(express.json()); 
 app.use("/", routes);  
-db.sync({ force: true })
+app.use(errors);
+db.sync()
   .then(() => {
     console.log("Database Recreated");
   });
