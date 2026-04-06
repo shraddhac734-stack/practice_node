@@ -8,4 +8,5 @@ router.get("/:id",userController.getUserById);
 router.put("/:id",userController.updateUserById);
 router.delete("/delete/:id",userController.deleteUserById);
 router.get("/",userController.getAllUser);
+router.post("/filter",userController.getUserListByFilter);
 module.exports = router;

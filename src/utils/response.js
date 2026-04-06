@@ -29,9 +29,11 @@ class Response {
 
 function getGeneralResponse(res, meta, data = null) {
   return res.status(meta.code).json({
+    generalMessage:{
     status: meta.status,
     code: meta.code,
     description: meta.description,
+  },
     data: data,
   });
 }
