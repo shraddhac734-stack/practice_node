@@ -13,7 +13,6 @@ class userController {
       next(error);
     }
   };
-
   getUserById = async (req, res, next) => {
     try {
       const result = await userService.getUserById(req.params.id);
@@ -25,15 +24,39 @@ class userController {
     }
   };
 
+  getAllUser =async (req,res,next) => {
+    try{
+      const result = await userService.getAllUser();
+      const meta = getOkResponse(messageConstant.USERS_FOUND_SUCCESSFULLY);
+      return getGeneralResponse(res,meta,result);
+    }catch(error){
+      console.log("error in getAllUser",error);
+      next(error);
+    }
+  };
   updateUserById = async (req, res, next) => {
     try {
-      const result = await userService.updateUserById(req.params.id);
+      const result = await userService.updateUserById(req.params.id,req.body);
+      console.log("ID:",req.params.id);
+      console.log("BODY:",req.body);
+      
       const meta = getUpdatedResponse(messageConstant.USER_UPDATED_SUCCESSFULLY);
       return getGeneralResponse(res,meta,result);
     } catch (error) {
       console.log("error in updateUserById", error);
       next(error);
     }
+  };
+
+  deleteUserById = async  (req,res,next)=> {
+    try{
+      const result = await userService.deleteUserById(req.params.id);
+      const meta =  getDeletedResponse(messageConstant.USER_DELETED_SUCCESSFULLY);
+      return getGeneralResponse(res,meta,result);
+    }catch(error){
+      console.log("error in deleteUserById", error);
+      next(error);
+    };
   };
 }
 module.exports = new userController();

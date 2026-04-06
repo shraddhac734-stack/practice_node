@@ -17,13 +17,29 @@ class userRepository {
     return user; //IMPORTANT
   }
   // Update User
-    async updateUserById(id, data) {
-        return await User.update(data, {
-            where: { id },
-            returning: true,
-        });
-        // [1]
-    }
+  async updateUserById(id, data) {
+    return await User.update(data, {
+      where: { id },
+      returning: true,
+    });
+    // [1]
+  }
+  //Delete User
+  async deleteUserById(id) {
+    return await User.update(
+      { softDelete: true },
+      {
+        where: { id, softDelete: false },
+      },
+    );
+  }
+
+  //GetAllUsers
+  async getAllUser() {
+    return await User.findAll({
+      where: { softDelete: false },
+    });
+  }
 }
 
 module.exports = new userRepository();
