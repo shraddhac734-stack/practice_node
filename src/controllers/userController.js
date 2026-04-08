@@ -56,5 +56,16 @@ class userController {
     };
   };
 
+  getUserListByFilter = async (req,res,next)=>{
+    try{
+      const result = await userService.getUserListByFilter(req.params.id);
+      const meta =  getOkResponse(messageConstant.USERS_FOUND_SUCCESSFULLY);
+      return getGeneralResponse(res,meta,result);
+    }
+    catch(error){
+        console.log(("Error in userListByFilter",error));
+        next(error)
+    }
+  };
 }
 module.exports = new userController();

@@ -40,6 +40,11 @@ class userRepository {
       where: { softDelete: false },
     });
   }
+
+  //GetUserListByFilter
+  async getUserListByFilter(){
+    return 
+  }
 }
 
 module.exports = new userRepository();

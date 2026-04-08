@@ -1,43 +1,136 @@
 const db = require("../configs/dbConfig");
-const { DataTypes } = require("sequelize");
+const { DataTypes, ENUM } = require("sequelize");
+const { UserRoleTypeList } = require("../enum/userRoleType");
+const {genderType}= require("../enum/gender");
+const {StatusUser}= require("../enum/userStatus");
+const bcrypt = require("bcrypt");
 
 const User = db.define(
-    'users', {
+  "users",
+  {
     id: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
-    name: {
-        type: DataTypes.STRING,
-        allowNull: false
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    middleName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    fullName: {
+      type: DataTypes.STRING,
+    },
+    initialLetter: {
+      type: DataTypes.STRING(2),
     },
     email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        validate: { isEmail: true }
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+      validate: { isEmail: true },
     },
     password: {
-        type: DataTypes.STRING,
-        allowNull: false
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    age: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+    },
+    gender: {
+      type: DataTypes.ENUM(genderType),
+      allowNull: false,
+    },
+    DateOfBirth: {
+      type: DataTypes.DATE,
+      allowNull: false,
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    State: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    Zipcode: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     phone: {
-        type: DataTypes.STRING,
-        allowNull: true
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    status: {
+      type: DataTypes.ENUM(StatusUser),
+      allowNull: false,
+    },
+    Roles: {
+      type: DataTypes.ENUM(UserRoleTypeList),
+      allowNull: false,
     },
     isActive: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: true
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
     },
     softDelete: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
     },
     createdAt: {
-        type: DataTypes.DATE,
+      type: DataTypes.DATE,
     },
     updatedAt: {
-        type: DataTypes.DATE,
-    }
-}, )
+      type: DataTypes.DATE,
+    },
+  },
+  {
+    hooks: {
+      beforeCreate:async  (user) => {
+        user.fullName = getFullName(user);
+        user.initialLetter=getInitial(user);
+        await hashPass(user);
+      },
+      beforeUpdate: async (user)=>{
+        user.fullName = getFullName(user);
+        user.initialLetter=getInitial(user);
+        await updatePass(user);
+      },
+}
+    },
+);
+
+function getFullName(user) {
+  return [user.firstName, user.middleName, user.lastName]
+  .filter((name) => name && name.trim() !== "",)
+  .join(" ");
+}
+
+function getInitial(user){
+  return (
+    (user.firstName?.[0]||"")+
+    (user.lastName?.[0]||"")
+  ).toUpperCase();
+}
+
+async function updatePass(user){
+  if (user.change("password")){
+    user.password = await bcrypt.hash(user.password, 10);
+  }
+}
+async function hashPass(user) {
+  if (user.password) {
+   return user.password = await bcrypt.hash(user.password, 10);   
+  }
+  // console.log(user.toJSON());
+}
+
 module.exports = User;

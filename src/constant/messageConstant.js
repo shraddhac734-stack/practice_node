@@ -37,6 +37,10 @@ const messageConstant = {
   NAME_TOO_SHORT:"name is too short",
   NAME_TOO_LONG:"name is too long ",
   PHONE_NUMBER_REQUIRED:"Enter phone number",
-  PHONE_NUMBER_MUST_BE_10_DIGITS:"Enter only 10 digit number"
+  PHONE_NUMBER_MUST_BE_10_DIGITS:"Enter only 10 digit number",
+  Pass_Is_Too_Long:"Password is too long",
+  NO_ALFABATES:"No alphabates are allowed",
+  AGE_GREATER_0:"Age must be greater than zero",
+  MUSTCONTAIN_LOWERCASE:"Name must write in lowercase letter"
 };
 module.exports = messageConstant;
