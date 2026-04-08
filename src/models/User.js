@@ -102,6 +102,7 @@ const User = db.define(
       beforeUpdate: async (user)=>{
         user.fullName = getFullName(user);
         user.initialLetter=getInitial(user);
+
         await updatePass(user);
       },
 }
@@ -121,11 +122,19 @@ function getInitial(user){
   ).toUpperCase();
 }
 
-async function updatePass(user){
-  if (user.change("password")){
-    user.password = await bcrypt.hash(user.password, 10);
-  }
-}
+// async function updatePass(user) {
+//   if (user.changed("password")) {
+//     user.password = await bcrypt.hash(user.password, 10);
+//   }
+// }
+
+async function updatePass (user) {
+      if (user.changed('password')) {
+        const salt = await bcrypt.genSalt(10);
+        user.password = await bcrypt.hash(user.password, salt);
+      }
+    }
+
 async function hashPass(user) {
   if (user.password) {
    return user.password = await bcrypt.hash(user.password, 10);   

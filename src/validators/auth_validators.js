@@ -4,6 +4,12 @@ const { genderType } = require("../enum/gender");
 const { StatusUser } = require("../enum/userStatus");
 const messageConstant = require("../constant/messageConstant");
 
+const UPPER_REGEX = /[A-Z]/;
+const LOWER_CASE=/[a-z]/;
+const NUMBER=/[0-9]/;
+const SYMBOL=/[@$!%*?&]/;
+const ALPHABETS=/^[A-Za-z\s]+$/s;
+
 const RoleEnum = z.enum(UserRoleTypeList);
 const genderEnum = z.enum(genderType);
 const userStatus = z.enum(StatusUser);
@@ -12,49 +18,25 @@ const email = z
   .string(messageConstant.EMAIL_REQUIRED)
   .email() //.transform used for transform value during parsing
   .trim()
-  .refine((val) => val.endsWith("@gmail.com"), {
-    message: messageConstant.VALID_EMAIL,
-  })
   .min(8, messageConstant.EMAIL_TOO_SHORT)
-  .max(255, messageConstant.EMAIL_TOO_LONG);
+  .max(255, messageConstant.EMAIL_TOO_LONG)
 
 const password = z
   .string(messageConstant.PASSWORD_REQUIRED)
   .trim()
   .min(8, messageConstant.PASSWORD_TOO_SHORT)
   .max(64, messageConstant.PASSWORD_TOO_LONG)
-  .refine((val) => /[A-Z]/.test(val), "Must contain uppercase")
-  .refine((val) => /[a-z]/.test(val), "Must contain lowercase")
-  .refine((val) => /[0-9]/.test(val), "Must contain number")
-  .refine((val) => /[@$!%*?&]/.test(val), "Must contain special character");
-
-// const firstName = z
-//   .string(messageConstant.NAME_REQUIRED)
-//   .trim()
-//   .min(2, messageConstant.NAME_TOO_SHORT)
-//   .max(255, messageConstant.NAME_TOO_LONG)
-//   .regex(/^[A-Za-z\s]+$/);
-
-// const middleName = z
-//   .string(messageConstant.NAME_REQUIRED)
-//   .trim()
-//   .min(2, messageConstant.NAME_TOO_SHORT)
-//   .max(255, messageConstant.NAME_TOO_LONG)
-//   .regex(/^[A-Za-z\s]+$/);
-
-// const lastName = z
-//   .string(messageConstant.NAME_REQUIRED)
-//   .trim()
-//   .min(2, messageConstant.NAME_TOO_SHORT)
-//   .max(255, messageConstant.NAME_TOO_LONG)
-//   .regex(/^[A-Za-z\s]+$/s);
+  .refine((val) => UPPER_REGEX.test(val), messageConstant.MUST_UPPER)
+  .refine((val) => LOWER_CASE.test(val), messageConstant.MUST_LOWER)
+  .refine((val) => NUMBER.test(val), messageConstant.MUST_NUM)
+  .refine((val) => SYMBOL.test(val), messageConstant.MUST_SYMBOL);
 
 const nameField = z
   .string(messageConstant.NAME_REQUIRED)
   .trim()
   .min(2, messageConstant.NAME_TOO_SHORT)
   .max(255, messageConstant.NAME_TOO_LONG)
-  .regex(/^[A-Za-z\s]+$/s);
+  .regex(ALPHABETS,messageConstant.ONLY_ALPHABETS);
 
 const DateOfBirth = z.coerce.date();
 
@@ -80,15 +62,15 @@ function calculateAge(dob) {
   return age;
 }
 
-const city = z.string().regex(/^[A-Za-z\s]+$/, messageConstant.NO_ALFABATES);
+const city = z.string().regex(ALPHABETS, messageConstant.ONLY_ALPHABETS);
 
-const State = z.string().regex(/^[A-Za-z\s]+$/, messageConstant.NO_ALFABATES);
+const State = z.string().regex(ALPHABETS, messageConstant.ONLY_ALPHABETS);
 
 const Zipcode = z
   .number()
   .int()
-  .gte(10000, "Invalid zipcode")
-  .lte(999999, "Invalid zipcode");
+  .gte(10000, messageConstant.INVALID_ZIP)
+  .lte(999999, messageConstant.INVALID_ZIP);
 
 const userSchema = z
   .object({
@@ -111,33 +93,29 @@ const userSchema = z
     age: calculateAge(data.DateOfBirth),
     initialLetter: (data.firstName[0] + data.lastName[0]).toUpperCase(),
   }))
-  .refine((data)=>{
-    const today=new Date();
-    const dob =new Date(data.DateOfBirth);
-    return dob<=today
-  },
-  {
-      message: "Date of birth cant be in future",
-      path: ["DateOfBirth"],
-  },)
-  .refine(
-    (data) => {
-      const age = calculateAge(data.DateOfBirth);
-      return age >= 18;
-    },
-    {
-      message: "Not eligible for login",
-      path: ["DateOfBirth"],
-    },
-  );
+  .superRefine(
+    (data,ctx)=>{
+      const today =new Date();
+      const dob = new Date(data.DateOfBirth);
+      if(dob>today)
+        ctx.addIssue({
+      message:messageConstant.FUTURE_DATEOFBIRTH,
+      path:["DateOfBirth"],
+    });
+    if(data.age<18)
+      ctx.addIssue({
+      message:messageConstant.NOT_ELIGIBLE,
+      path:["DateOfBirth"],
+      });
+    });
 
 // update schema (all optional)
 const updateUserSchema = z.object({
   email: email.optional(),
+  firstName:nameField.optional(),
+  middleName:nameField.optional(),
+  lastName:nameField.optional(),
   password: password.optional(),
-  // firstName: firstName.optional(),
-  // middleName: middleName.optional(),
-  // lastName: lastName.optional(),
   gender: genderEnum.optional(),
   DateOfBirth: DateOfBirth.optional(),
   city: city.optional(),

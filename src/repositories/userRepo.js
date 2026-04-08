@@ -17,13 +17,17 @@ class userRepository {
     return user; //IMPORTANT
   }
   // Update User
-  async updateUserById(id, data) {
-    return await User.update(data, {
-      where: { id },
-      returning: true,
-    });
+  // async updateUserById(id, data) {
+  //   return await User.update(data, {
+  //     where: { id },
+  //     returning: true,
+  //   });
+  async getUserByid(id) {
+  return await User.findByPk(id); // ✅ returns instance
+
     // [1]
   }
+
   //Delete User
   async deleteUserById(id) {
     return await User.update(

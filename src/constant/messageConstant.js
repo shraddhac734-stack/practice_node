@@ -41,6 +41,14 @@ const messageConstant = {
   Pass_Is_Too_Long:"Password is too long",
   NO_ALFABATES:"No alphabates are allowed",
   AGE_GREATER_0:"Age must be greater than zero",
-  MUSTCONTAIN_LOWERCASE:"Name must write in lowercase letter"
+  MUSTCONTAIN_LOWERCASE:"Name must write in lowercase letter",
+  FUTURE_DATEOFBIRTH:"Date of birth cant be in future",
+  NOT_ELIGIBLE:"Not eligible for login",
+  INVALID_ZIP:"Invalid zipcode",
+  MUST_UPPER:"Must contain uppercase",
+  MUST_LOWER:"Must contain lowercase",
+  MUST_NUM:"Must contain number",
+  MUST_SYMBOL:"Must contain special character",
+  ONLY_ALPHABETS:"only alphabets are allowed"
 };
 module.exports = messageConstant;

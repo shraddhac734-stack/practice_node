@@ -10,6 +10,7 @@ const {
 } = require("../validators/auth_validators");
 const User = require("../models/User");
 const { success } = require("zod");
+const bcrypt = require("bcrypt");
 class userService {
   // Create User
   async addUser(data) {
@@ -56,14 +57,25 @@ class userService {
     }
 
     const validateData = result.data;
+    const user = await UserRepository.getUserByid(id);
 
-    if (validateData.password) {
-      validateData.password = await bcrypt.hash(validateData.password, 10);
-    }
+  if (!user) {
+    throw new Error("User not found");
+  }
+console.log(validateData);
 
-    const updated = await UserRepository.updateUserById(id, validateData);
+  // ✅ STEP 2: Update values
+  Object.assign(user, validateData);
+  if (data?.password) {
+            // convert password in becrypt
+            data.password = await bcrypt.hash(data?.password, 10);
+        }
+    console.log(validateData);
+  // ✅ STEP 3: Save (HOOK WILL RUN)
+  await user.save();
 
-    return updated[1]?.[0] || null;
+  return user;
+    // return updated[1]?.[0] || null;
   }
 
   //DeleteUserById
