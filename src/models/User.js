@@ -74,7 +74,7 @@ const User = db.define(
       allowNull: false,
       defaultValue:("ACTIVE"),
     },
-    Roles: {
+    roles: {
       type: DataTypes.ENUM(UserRoleTypeList),
       allowNull: false,
       defaultValue:("USER"),
@@ -93,6 +93,10 @@ const User = db.define(
     updatedAt: {
       type: DataTypes.DATE,
     },
+    loginAttempts: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0,
+},
   },
   {
     hooks: {

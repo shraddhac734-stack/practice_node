@@ -1,31 +1,99 @@
-const emailTemplate = (name, email) => {
+const emailTemplate = (name, email,createdAt) => {
   return `
-    <div style="font-family: Arial; padding: 20px; background: #f4f4f4;">
-      <div style="max-width: 600px; margin: auto; background: #fff; padding: 20px; border-radius: 10px;">
-        
-        <h2 style="color: #4CAF50;">Welcome, ${name}</h2>
-        
-        <p>Your account has been created successfully.</p>
-        
-        <table style="width: 100%; margin-top: 10px;">
-          <tr>
-            <td><strong>Email:</strong></td>
-            <td>${email}</td>
-          </tr>
-        </table>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Registration</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
 
-        <p style="margin-top: 20px;">
-          You can now login and start using our platform.
-        </p>
+        .container {
+            max-width: 600px;
+            margin: 30px auto;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
 
-        <hr />
+        .header {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
 
-        <p style="font-size: 12px; color: gray;">
-          This is an automated message. Please do not reply.
-        </p>
+        .header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
 
-      </div>
+        .content {
+            padding: 25px 30px;
+        }
+
+        .content h3 {
+            color: #4a90e2;
+            margin-top: 0;
+        }
+
+        .details {
+            background-color: #f2f4f6;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .details p {
+            margin: 8px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #4a90e2;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 15px;
+        }
+
+        .btn:hover {
+            background-color: #357ab8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>User Registration Successful</h2>
+        </div>
+
+        <div class="content">
+            <h3>Hello ${name},</h3>
+            <p>Your account has been successfully created. Here are your registration details:</p>
+
+            <div class="details">
+                <p><strong>Email:</strong> ${email}</p>
+                <p><strong>Registration Date:</strong> ${createdAt}</p>
+                <p><strong>Username:</strong> ${name}</p>
+            </div>
+
+            <p>You can now log in to your account using the link below:</p>
+            <a href="${createdAt}" class="btn">Login</a>
+
+            <p>If you didn’t register, please ignore this email.</p>
+        </div>
     </div>
+</body>
+</html>
   `;
 };
 

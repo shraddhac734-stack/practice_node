@@ -13,6 +13,7 @@ const {
 const User = require("../models/User");
 const { success } = require("zod");
 const bcrypt = require("bcrypt");
+const userRepo = require("../repositories/userRepo");
 
 class userService {
   // Create User
@@ -23,15 +24,61 @@ class userService {
       throw result.error;
     }
     const validatedData = result.data;
-    const htmlContent = emailTemplate(data.firstName, data.email);
+    const newUser=await UserRepository.addUser(validatedData);
+    const date=newUser.createdAt;
+     const htmlContent = emailTemplate(data.firstName, data.email,date.toLocaleString());
+    // const loginDate =data.createdAt;    
 
     await sendEmail(
       data.email,
       messageConstant.USER_ADDED_SUCCESSFULLY,
       htmlContent,
     );
-    return await UserRepository.addUser(validatedData);
+    return newUser;
   }
+
+  //Login User
+  async loginUser(data) {
+
+    console.log("LOGIN DATA",data);
+    if (!data)
+      throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
+    
+    const { email, password } = data;
+    if(!email||!password) {
+      throw new InvalidRequestException(messageConstant.EMAIL_PASSWORD_REQUIRED);
+    }
+    const user = await userRepo.loginUser(email);
+    if (!user)
+      throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+        // WRONG PASSWORD LOGIC
+        const newAttempts = user.loginAttempts + 1;
+
+        if (newAttempts >= 5) {
+            // Block the user
+            await user.update({ 
+                loginAttempts: newAttempts, 
+                status: "BLOCK" 
+            });
+            throw new Error("Too many failed attempts. Your account has been BLOCKED.");
+        } else {
+            // Increment attempt count
+            await user.update({ loginAttempts: newAttempts });
+            throw new Error(`Invalid password. ${5 - newAttempts} attempts remaining.`);
+        }
+    }
+
+    // 4. SUCCESSFUL LOGIN
+    // Reset attempts back to 0 on successful login
+    await user.update({ loginAttempts: 0 });
+
+    return user;
+  }
+
   //GetUserById
   async getUserById(id) {
     if (!id) {

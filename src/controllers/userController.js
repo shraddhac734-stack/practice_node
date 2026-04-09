@@ -13,6 +13,18 @@ class userController {
       next(error);
     }
   };
+
+loginUser = async (req,res,next)=>{
+  try {
+    const result=await userService.loginUser(req.body);
+    const meta=getCreatedResponse(messageConstant.LOGIN_SUCCESSFULLY);
+    return getGeneralResponse(res,meta,result)
+  } catch (error) {
+    console.log("error in login user:",error);
+    next(error);
+  }
+};
+
   getUserById = async (req, res, next) => {
     try {
       const result = await userService.getUserById(req.params.id);
@@ -68,5 +80,6 @@ class userController {
     }
   };
 }
+
 
 module.exports = new userController();

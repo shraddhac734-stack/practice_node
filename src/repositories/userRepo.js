@@ -1,9 +1,19 @@
+const messageConstant = require("../constant/messageConstant");
 const User = require("../models/User");
 
 class userRepository {
   // Create User
   async addUser(data) {
     return await User.create(data);
+  }
+
+  //Login User
+  async loginUser(email){
+   const user=await User.findOne({
+    where:{ email},
+   }) 
+    if(!user) return null;
+    return user; 
   }
 
   // Get User By Id

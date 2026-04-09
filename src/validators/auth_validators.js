@@ -122,7 +122,7 @@ const updateUserSchema = z.object({
   State: State.optional(),
   Zipcode: Zipcode.optional(),
   sttaus: userStatus.optional(),
-  Roles: RoleEnum.optional(),
+  roles: RoleEnum.optional(),
   phone: phone.optional(),
 });
 

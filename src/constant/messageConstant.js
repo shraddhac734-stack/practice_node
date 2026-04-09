@@ -24,6 +24,7 @@ const messageConstant = {
   INTERNAL_SERVER_ERROR: "Internal server error",
   USER_DOES_NOT_EXIST_WITH_THIS_EMAIL: "User does not exist with this email",
   INCORRECT_PASSWORD: "Incorrect password",
+  EMAIL_PASSWORD_REQUIRED:"Email & Passwrod are required",
   USER_ALREADY_EXISTS_WITH_THIS_EMAIL: "User already exists with this email",
 
   //VALIDATIORS
