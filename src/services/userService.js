@@ -1,5 +1,7 @@
 const UserRepository = require("../repositories/userRepo");
 const messageConstant = require("../constant/messageConstant");
+const { sendEmail } = require("./emailSevice");
+const { emailTemplate } = require("../templates/emailTemplate");
 const {
   InvalidRequestException,
   NotFoundException,
@@ -11,6 +13,7 @@ const {
 const User = require("../models/User");
 const { success } = require("zod");
 const bcrypt = require("bcrypt");
+
 class userService {
   // Create User
   async addUser(data) {
@@ -19,8 +22,14 @@ class userService {
     if (!result.success) {
       throw result.error;
     }
-    // Get validated data
     const validatedData = result.data;
+    const htmlContent = emailTemplate(data.firstName, data.email);
+
+    await sendEmail(
+      data.email,
+      messageConstant.USER_ADDED_SUCCESSFULLY,
+      htmlContent,
+    );
     return await UserRepository.addUser(validatedData);
   }
   //GetUserById

@@ -9,4 +9,5 @@ router.put("/:id",userController.updateUserById);
 router.delete("/delete/:id",userController.deleteUserById);
 router.get("/",userController.getAllUser);
 router.post("/filter",userController.getUserListByFilter);
+// router.post("/login",userController.loginUser);
 module.exports = router;
