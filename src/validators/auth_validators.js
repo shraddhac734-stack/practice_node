@@ -84,8 +84,8 @@ const userSchema = z
     city: city,
     State: State,
     Zipcode: Zipcode,
-    status: userStatus,
-    Roles: RoleEnum,
+    // status: userStatus,
+    // Roles: RoleEnum,
     phone: phone,
   })
   .transform((data) => ({

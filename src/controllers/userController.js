@@ -63,7 +63,7 @@ class userController {
       return getGeneralResponse(res,meta,result);
     }
     catch(error){
-        console.log(("Error in userListByFilter",error));
+        console.log("Error in userListByFilter",error);
         next(error)
     }
   };

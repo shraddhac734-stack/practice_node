@@ -72,10 +72,12 @@ const User = db.define(
     status: {
       type: DataTypes.ENUM(StatusUser),
       allowNull: false,
+      defaultValue:("ACTIVE"),
     },
     Roles: {
       type: DataTypes.ENUM(UserRoleTypeList),
       allowNull: false,
+      defaultValue:("USER"),
     },
     isActive: {
       type: DataTypes.BOOLEAN,
@@ -122,12 +124,6 @@ function getInitial(user){
   ).toUpperCase();
 }
 
-// async function updatePass(user) {
-//   if (user.changed("password")) {
-//     user.password = await bcrypt.hash(user.password, 10);
-//   }
-// }
-
 async function updatePass (user) {
       if (user.changed('password')) {
         const salt = await bcrypt.genSalt(10);
@@ -139,7 +135,6 @@ async function hashPass(user) {
   if (user.password) {
    return user.password = await bcrypt.hash(user.password, 10);   
   }
-  // console.log(user.toJSON());
 }
 
 module.exports = User;

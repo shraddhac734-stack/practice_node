@@ -14,18 +14,11 @@ class userRepository {
 
     if (!user) return null;
 
-    return user; //IMPORTANT
+    return user;
   }
-  // Update User
-  // async updateUserById(id, data) {
-  //   return await User.update(data, {
-  //     where: { id },
-  //     returning: true,
-  //   });
-  async getUserByid(id) {
-  return await User.findByPk(id); // ✅ returns instance
 
-    // [1]
+  async getUserByid(id) {
+    return await User.findByPk(id);
   }
 
   //Delete User
@@ -46,8 +39,8 @@ class userRepository {
   }
 
   //GetUserListByFilter
-  async getUserListByFilter(){
-    return 
+  async getUserListByFilter() {
+    return;
   }
 }
 
