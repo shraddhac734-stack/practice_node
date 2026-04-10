@@ -1,6 +1,7 @@
 const UserRepository = require("../repositories/userRepo");
 const messageConstant = require("../constant/messageConstant");
 const { sendEmail } = require("./emailSevice");
+const crypto = require("node:crypto");
 const { emailTemplate } = require("../templates/emailTemplate");
 const { loginTemplate } = require("../templates/loginTemplate");
 const {
@@ -15,6 +16,7 @@ const User = require("../models/User");
 const { success } = require("zod");
 const bcrypt = require("bcrypt");
 const userRepo = require("../repositories/userRepo");
+const { blockUserTemplate } = require("../templates/blockUserTemplate");
 
 class userService {
   // Create User
@@ -25,11 +27,14 @@ class userService {
       throw result.error;
     }
     const validatedData = result.data;
-    const newUser=await UserRepository.addUser(validatedData);
-    const date=newUser.createdAt;
-     const htmlContent = emailTemplate(data.firstName, data.email,date.toLocaleString());
-    // const loginDate =data.createdAt;    
-
+    const newUser = await UserRepository.addUser(validatedData);
+    const date = newUser.createdAt;
+    const htmlContent = emailTemplate(
+      data.firstName,
+      data.email,
+      date.toLocaleString(),
+      process.env.LOGIN_URL,
+    );
     await sendEmail(
       data.email,
       messageConstant.USER_ADDED_SUCCESSFULLY,
@@ -38,53 +43,72 @@ class userService {
     return newUser;
   }
 
+  async verifyOtp(data) {}
+
   //Login User
   async loginUser(data) {
-
-    console.log("LOGIN DATA",data);
+    console.log("LOGIN DATA", data);
     if (!data)
       throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
-    
+
     const { email, password } = data;
-    if(!email||!password) {
-      throw new InvalidRequestException(messageConstant.EMAIL_PASSWORD_REQUIRED);
+    if (!email || !password) {
+      throw new InvalidRequestException(
+        messageConstant.EMAIL_PASSWORD_REQUIRED,
+      );
     }
     const user = await UserRepository.loginUser(email);
     if (!user)
       throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
-
+    // WRONG PASSWORD LOGIC
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
-        // WRONG PASSWORD LOGIC
-        const newAttempts = user.loginAttempts + 1;
+      const currentAttempts = Number(user.loginAttempts) || 0;
+      const newAttempts = currentAttempts + 1;
+      if (newAttempts >= 5) {
+        // Block the user
+        await user.update({
+          loginAttempts: newAttempts,
+          status: "BLOCK",
+        });
+        const htmlContent = blockUserTemplate(user.firstName, user.email);
 
-        if (newAttempts >= 5) {
-            // Block the user
-            await user.update({ 
-                loginAttempts: newAttempts, 
-                status: "BLOCK" 
-            });
-            throw new Error("Too many failed attempts. Your account has been BLOCKED.");
-        } else {
-            // Increment attempt count
-            await user.update({ loginAttempts: newAttempts });
-            throw new Error(`Invalid password. ${5 - newAttempts} attempts remaining.`);
+        // Use a try-catch for the email so it doesn't crash the whole process
+        try {
+          await sendEmail(
+            data.email,
+            messageConstant.USER_BLOCKED,
+            htmlContent,
+          );
+        } catch (mailError) {
+          console.error("Failed to send block email:", mailError);
         }
-    }
+        throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
+      } else {
+        // Increment attempt count
+        await user.update({ loginAttempts: newAttempts });
+        throw new Error(
+          messageConstant.INCORRECT_PASSWORD `${5 - newAttempts} attempts remaining.`,
+        );
+      }
+    } else {
+      // Reset attempts back to 0 on successful login
+      await user.update({ loginAttempts: 0 });
+      const otpStore = {};
+      const otp = crypto.randomInt(100000, 999999).toString();
 
-    else
-    {
-       const htmlContent = loginTemplate(user.firstName, user.email);
-    await sendEmail(
-      data.email,
-      messageConstant.USER_LOGIN_SUCCESSFULLY,
-      htmlContent,
-    );
+      // Store OTP with 5-minute expiry
+      otpStore[email] = {
+        otp: otp,
+        expires: Date.now() + 300000,
+      };
+      const htmlContent = loginTemplate(user.firstName, user.email, otp);
+      await sendEmail(
+        data.email,
+        messageConstant.USER_LOGIN_SUCCESSFULLY,
+        htmlContent,
+      );
     }
-
-    // Reset attempts back to 0 on successful login
-    await user.update({ loginAttempts: 0 });
     return user;
   }
 

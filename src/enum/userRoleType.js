@@ -1,7 +1,8 @@
 const UserRoleType = {
   USER: "USER",
   ADMIN: "ADMIN",
-  ANONYMOUSE: "ANONYMOUSE",
+  ANONYMOUS: "ANONYMOUS",
 };
+
 const UserRoleTypeList = Object.values(UserRoleType);
 module.exports = { UserRoleType, UserRoleTypeList };

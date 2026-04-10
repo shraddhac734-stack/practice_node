@@ -24,6 +24,16 @@ loginUser = async (req,res,next)=>{
     next(error);
   }
 };
+verifyOtp =async (req,res,next)=>{
+  try {
+    const result=await userService.verifyOtp(req.body);
+    const meta=getCreatedResponse(messageConstant.OTP_VERIFIED);
+    return getGeneralResponse(res,meta,result)
+  } catch (error) {
+    console.log("Error in OTP verification:",error);
+    next(error);
+  }
+}
 
   getUserById = async (req, res, next) => {
     try {

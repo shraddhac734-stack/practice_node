@@ -38,7 +38,7 @@ const nameField = z
   .max(255, messageConstant.NAME_TOO_LONG)
   .regex(ALPHABETS,messageConstant.ONLY_ALPHABETS);
 
-const DateOfBirth = z.coerce.date();
+const dateOfBirth = z.coerce.date();
 
 const phone = z
   .string(messageConstant.PHONE_NUMBER_REQUIRED)
@@ -64,9 +64,9 @@ function calculateAge(dob) {
 
 const city = z.string().regex(ALPHABETS, messageConstant.ONLY_ALPHABETS);
 
-const State = z.string().regex(ALPHABETS, messageConstant.ONLY_ALPHABETS);
+const state = z.string().regex(ALPHABETS, messageConstant.ONLY_ALPHABETS);
 
-const Zipcode = z
+const zipCode = z
   .number()
   .int()
   .gte(10000, messageConstant.INVALID_ZIP)
@@ -80,32 +80,32 @@ const userSchema = z
     middleName: nameField,
     lastName: nameField,
     gender: genderEnum,
-    DateOfBirth: DateOfBirth,
+    dateOfBirth: dateOfBirth,
     city: city,
-    State: State,
-    Zipcode: Zipcode,
+    state: state,
+    zipCode: zipCode,
     // status: userStatus,
     // Roles: RoleEnum,
     phone: phone,
   })
   .transform((data) => ({
     ...data,
-    age: calculateAge(data.DateOfBirth),
+    age: calculateAge(data.dateOfBirth),
     initialLetter: (data.firstName[0] + data.lastName[0]).toUpperCase(),
   }))
   .superRefine(
     (data,ctx)=>{
       const today =new Date();
-      const dob = new Date(data.DateOfBirth);
+      const dob = new Date(data.dateOfBirth);
       if(dob>today)
         ctx.addIssue({
-      message:messageConstant.FUTURE_DATEOFBIRTH,
-      path:["DateOfBirth"],
+      message:messageConstant.FUTURE_dateOfBirth,
+      path:["dateOfBirth"],
     });
     if(data.age<18)
       ctx.addIssue({
       message:messageConstant.NOT_ELIGIBLE,
-      path:["DateOfBirth"],
+      path:["dateOfBirth"],
       });
     });
 
@@ -117,11 +117,11 @@ const updateUserSchema = z.object({
   lastName:nameField.optional(),
   password: password.optional(),
   gender: genderEnum.optional(),
-  DateOfBirth: DateOfBirth.optional(),
+  dateOfBirth: dateOfBirth.optional(),
   city: city.optional(),
-  State: State.optional(),
-  Zipcode: Zipcode.optional(),
-  sttaus: userStatus.optional(),
+  state: state.optional(),
+  zipCode: zipCode.optional(),
+  staus: userStatus.optional(),
   roles: RoleEnum.optional(),
   phone: phone.optional(),
 });

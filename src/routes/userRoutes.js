@@ -10,4 +10,5 @@ router.delete("/delete/:id",userController.deleteUserById);
 router.get("/",userController.getAllUser);
 router.post("/filter",userController.getUserListByFilter);
 router.post("/login",userController.loginUser);
+router.post("/verifyOtp",userController.verifyOtp);
 module.exports = router;

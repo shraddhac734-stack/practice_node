@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
 
+
+
 // 1. Create transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -8,6 +10,11 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS  // app password (not normal password)
   }
 });
+// const otpStore={};
+// otpStore[] = {
+//         otp: otp,
+//         expires: Date.now() + 300000 
+//     };
 // 2. Send Email Function
 const sendEmail = async (to, subject, html) => {
   try {
@@ -25,7 +32,4 @@ const sendEmail = async (to, subject, html) => {
     console.error("Email error:", error);
   }
  };
-// const registerUser =sendEmail();
-// const loginUserMail=sendEmail();
-
 module.exports = { sendEmail };

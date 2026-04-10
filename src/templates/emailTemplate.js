@@ -1,3 +1,5 @@
+ require("dotenv").config();
+
 const emailTemplate = (name, email,createdAt) => {
   return `
     <!DOCTYPE html>
@@ -87,7 +89,7 @@ const emailTemplate = (name, email,createdAt) => {
             </div>
 
             <p>You can now log in to your account using the link below:</p>
-            <a href="${createdAt}" class="btn">Login</a>
+            <a href="${process.env.LOGIN_URL}" class="btn">Login</a>
 
             <p>If you didn’t register, please ignore this email.</p>
         </div>

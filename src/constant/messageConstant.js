@@ -16,6 +16,8 @@ const messageConstant = {
   USERS_FOUND_SUCCESSFULLY: "User Found Successfully",
   LOGIN_SUCCESSFULLY: "Login Successfully",
   USER_LOGIN_SUCCESSFULLY:"User Login Successfully",
+  OTP_VERIFIED:"OTP is verified",
+  USER_BLOCKED:"User Blocked",
 
   //EXCEPTION
   INVALID_REQUEST: "Invalid request",
@@ -27,6 +29,7 @@ const messageConstant = {
   INCORRECT_PASSWORD: "Incorrect password",
   EMAIL_PASSWORD_REQUIRED:"Email & Passwrod are required",
   USER_ALREADY_EXISTS_WITH_THIS_EMAIL: "User already exists with this email",
+  TOO_MANY_ATTEMPTS:"Too many failed attempts. Your account has been BLOCKED.",
 
   //VALIDATIORS
   VALID_EMAIL:"Please enter valid email",
@@ -41,13 +44,13 @@ const messageConstant = {
   NAME_TOO_LONG:"name is too long ",
   PHONE_NUMBER_REQUIRED:"Enter phone number",
   PHONE_NUMBER_MUST_BE_10_DIGITS:"Enter only 10 digit number",
-  Pass_Is_Too_Long:"Password is too long",
+  PASS_TOO_LONG:"Password is too long",
   NO_ALFABATES:"No alphabates are allowed",
   AGE_GREATER_0:"Age must be greater than zero",
   MUSTCONTAIN_LOWERCASE:"Name must write in lowercase letter",
-  FUTURE_DATEOFBIRTH:"Date of birth cant be in future",
+  FUTURE_dateOfBirth:"Date of birth cant be in future",
   NOT_ELIGIBLE:"Not eligible for login",
-  INVALID_ZIP:"Invalid zipcode",
+  INVALID_ZIP:"Invalid zipCode",
   MUST_UPPER:"Must contain uppercase",
   MUST_LOWER:"Must contain lowercase",
   MUST_NUM:"Must contain number",

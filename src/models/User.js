@@ -46,36 +46,40 @@ const User = db.define(
       allowNull: false,
     },
     gender: {
-      type: DataTypes.ENUM(genderType),
+      type: DataTypes.STRING,
+      enum:(genderType),
       allowNull: false,
     },
-    DateOfBirth: {
+    dateOfBirth: {
       type: DataTypes.DATE,
-      allowNull: false,
+      allowNull: true,
     },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    State: {
+    state: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    Zipcode: {
+    zipCode: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      defaultValue:360410,
     },
     phone: {
       type: DataTypes.STRING,
       allowNull: true,
     },
     status: {
-      type: DataTypes.ENUM(StatusUser),
+      type: DataTypes.STRING,
+      enum:StatusUser,
       allowNull: false,
       defaultValue:("ACTIVE"),
     },
     roles: {
-      type: DataTypes.ENUM(UserRoleTypeList),
+      type: DataTypes.STRING,
+      enum:(UserRoleTypeList),
       allowNull: false,
       defaultValue:("USER"),
     },
@@ -96,6 +100,7 @@ const User = db.define(
     loginAttempts: {
       type: DataTypes.INTEGER,
       defaultValue: 0,
+      allowNull:false,
 },
   },
   {

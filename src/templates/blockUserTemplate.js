@@ -1,4 +1,4 @@
-const loginTemplate = (name, email,otp) => {
+const blockUserTemplate = (name, email) => {
   return `
     <!DOCTYPE html>
 <html lang="en">
@@ -24,7 +24,7 @@ const loginTemplate = (name, email,otp) => {
         }
 
         .header {
-            background-color: #4a90e2;
+            background-color: #f40a0a;
             color: white;
             text-align: center;
             padding: 20px;
@@ -40,7 +40,7 @@ const loginTemplate = (name, email,otp) => {
         }
 
         .content h3 {
-            color: #4a90e2;
+            color: #f40a0a;
             margin-top: 0;
         }
 
@@ -57,7 +57,7 @@ const loginTemplate = (name, email,otp) => {
 
         .btn {
             display: inline-block;
-            background-color: #4a90e2;
+            background-color: #f40a0a;
             color: white;
             padding: 10px 20px;
             border-radius: 5px;
@@ -66,29 +66,26 @@ const loginTemplate = (name, email,otp) => {
         }
 
         .btn:hover {
-            background-color: #357ab8;
+            background-color: #f40a0a;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h2>User Login Successful</h2>
+            <h2>Account Blocked!!</h2>
         </div>
 
         <div class="content">
             <h3>Hello ${name},</h3>
-           <p style="font-size: 16px; color: #555;"> Your One-Time Password (OTP) for login is: </p>
+           <p style="font-size: 16px; color: #555;">
+                Your account has been temporarily <strong>blocked</strong> due to multiple unsuccessful login attempts.
+            </p>
 
-           <h1 style="letter-spacing: 5px; color: #4CAF50;"> ${otp} </h1>
-           
             <div class="details">
                 <p><strong>Email:</strong> ${email}</p>
                 <p><strong>Username:</strong> ${name}</p>
             </div>
-
-            <p style="color: #999; font-size: 14px;">This OTP is valid for 5 minutes. Do not share it with anyone.</p>
-            <p>If you didn’t register, please ignore this email.</p>
         </div>
     </div>
 </body>
@@ -96,4 +93,4 @@ const loginTemplate = (name, email,otp) => {
   `;
 };
 
-module.exports = { loginTemplate };
+module.exports = { blockUserTemplate };
