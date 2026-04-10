@@ -60,20 +60,18 @@ class userService {
     const user = await UserRepository.loginUser(email);
     if (!user)
       throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
-    // WRONG PASSWORD LOGIC
+    if (user.status === "BLOCK") {
+    throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
+  }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      const currentAttempts = Number(user.loginAttempts) || 0;
-      const newAttempts = currentAttempts + 1;
-      if (newAttempts >= 5) {
+      const maxLimit = 5;
+      await user.increment('loginAttempts', {by:1});
+      await user.reload();
+      if (user.loginAttempts >= maxLimit) {
         // Block the user
-        await user.update({
-          loginAttempts: newAttempts,
-          status: "BLOCK",
-        });
+        await user.update({status: "BLOCK"})
         const htmlContent = blockUserTemplate(user.firstName, user.email);
-
-        // Use a try-catch for the email so it doesn't crash the whole process
         try {
           await sendEmail(
             data.email,
@@ -85,11 +83,8 @@ class userService {
         }
         throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
       } else {
-        // Increment attempt count
-        await user.update({ loginAttempts: newAttempts });
-        throw new Error(
-          messageConstant.INCORRECT_PASSWORD `${5 - newAttempts} attempts remaining.`,
-        );
+        const remainingAttemptCount = maxLimit - user.loginAttempts;
+        throw new Error(messageConstant.INCORRECT_PASSWORD(remainingAttemptCount));
       }
     } else {
       // Reset attempts back to 0 on successful login
