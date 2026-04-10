@@ -8,7 +8,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS  // app password (not normal password)
   }
 });
-
 // 2. Send Email Function
 const sendEmail = async (to, subject, html) => {
   try {
@@ -25,6 +24,8 @@ const sendEmail = async (to, subject, html) => {
   } catch (error) {
     console.error("Email error:", error);
   }
-};
+ };
+// const registerUser =sendEmail();
+// const loginUserMail=sendEmail();
 
 module.exports = { sendEmail };

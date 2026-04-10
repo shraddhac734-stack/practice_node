@@ -11,6 +11,7 @@ class userRepository {
   async loginUser(email){
    const user=await User.findOne({
     where:{ email},
+    attributes:['id','email','firstName','fullName','password']
    }) 
     if(!user) return null;
     return user; 

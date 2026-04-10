@@ -15,6 +15,7 @@ const messageConstant = {
   USER_DELETED_SUCCESSFULLY: "User Deleted Successfully",
   USERS_FOUND_SUCCESSFULLY: "User Found Successfully",
   LOGIN_SUCCESSFULLY: "Login Successfully",
+  USER_LOGIN_SUCCESSFULLY:"User Login Successfully",
 
   //EXCEPTION
   INVALID_REQUEST: "Invalid request",

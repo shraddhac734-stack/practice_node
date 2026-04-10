@@ -2,6 +2,7 @@ const UserRepository = require("../repositories/userRepo");
 const messageConstant = require("../constant/messageConstant");
 const { sendEmail } = require("./emailSevice");
 const { emailTemplate } = require("../templates/emailTemplate");
+const { loginTemplate } = require("../templates/loginTemplate");
 const {
   InvalidRequestException,
   NotFoundException,
@@ -48,7 +49,7 @@ class userService {
     if(!email||!password) {
       throw new InvalidRequestException(messageConstant.EMAIL_PASSWORD_REQUIRED);
     }
-    const user = await userRepo.loginUser(email);
+    const user = await UserRepository.loginUser(email);
     if (!user)
       throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
 
@@ -72,10 +73,18 @@ class userService {
         }
     }
 
-    // 4. SUCCESSFUL LOGIN
+    else
+    {
+       const htmlContent = loginTemplate(user.firstName, user.email);
+    await sendEmail(
+      data.email,
+      messageConstant.USER_LOGIN_SUCCESSFULLY,
+      htmlContent,
+    );
+    }
+
     // Reset attempts back to 0 on successful login
     await user.update({ loginAttempts: 0 });
-
     return user;
   }
 
