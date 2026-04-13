@@ -17,6 +17,13 @@ class userRepository {
     return user; 
   }
 
+  //Verify OTP
+ async verifyOtp(email) {
+    return await User.update(
+        { isVerified: true },
+        { where: { email } }
+    );
+}
   // Get User By Id
   async getUserById(id) {
     const user = await User.findOne({

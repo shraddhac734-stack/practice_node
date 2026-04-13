@@ -24,16 +24,19 @@ loginUser = async (req,res,next)=>{
     next(error);
   }
 };
-verifyOtp =async (req,res,next)=>{
-  try {
-    const result=await userService.verifyOtp(req.body);
-    const meta=getCreatedResponse(messageConstant.OTP_VERIFIED);
-    return getGeneralResponse(res,meta,result)
-  } catch (error) {
-    console.log("Error in OTP verification:",error);
-    next(error);
-  }
-}
+  verifyOtp = async (req, res, next) => {
+    try {
+      const { otp} = req.body;
+        const authHeader = req.headers.authorization;
+        const token = authHeader && authHeader.split(' ')[1];
+        const result = await userService.verifyOtp({ otp, token});
+        const meta=getOkResponse(messageConstant.LOGIN_SUCCESSFULLY);
+        return getGeneralResponse( res,meta,result);
+    } catch (error) {
+        console.log("error in verifyOTP:", error);
+        next(error);
+    }
+};
 
   getUserById = async (req, res, next) => {
     try {

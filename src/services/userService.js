@@ -2,6 +2,7 @@ const UserRepository = require("../repositories/userRepo");
 const messageConstant = require("../constant/messageConstant");
 const { sendEmail } = require("./emailSevice");
 const crypto = require("node:crypto");
+const jwt = require("jsonwebtoken")
 const { emailTemplate } = require("../templates/emailTemplate");
 const { loginTemplate } = require("../templates/loginTemplate");
 const {
@@ -42,8 +43,6 @@ class userService {
     );
     return newUser;
   }
-
-  async verifyOtp(data) {}
 
   //Login User
   async loginUser(data) {
@@ -97,16 +96,38 @@ class userService {
         otp: otp,
         expires: Date.now() + 300000,
       };
+
+      const tempToken = jwt.sign(
+            { email, otp }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '5m' }
+        );
+
       const htmlContent = loginTemplate(user.firstName, user.email, otp);
       await sendEmail(
         data.email,
         messageConstant.USER_LOGIN_SUCCESSFULLY,
         htmlContent,
       );
+    
+    return tempToken;
     }
-    return user;
   }
 
+  //VerifyOTP
+  async verifyOtp({ otp, token }) {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);  
+    if (String(decoded.otp) !== String(otp).trim()) {
+        throw new Error(messageConstant.INVALID_EXPIRE_OTP);
+        }
+  await UserRepository.verifyOtp(decoded.email);
+    const accessToken = jwt.sign(
+            { email: decoded.email }, 
+            process.env.JWT_SECRET, 
+            { expiresIn: '24h' }
+        );
+        return { verified: true };
+  }  
   //GetUserById
   async getUserById(id) {
     if (!id) {

@@ -101,7 +101,12 @@ const User = db.define(
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull:false,
-},
+    },
+    otpStore:{
+      type:DataTypes.INTEGER,
+      defaultValue:0,
+      allowNull:true,
+    }
   },
   {
     hooks: {
