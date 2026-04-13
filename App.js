@@ -14,6 +14,6 @@ app.listen(port, () => {
 app.use(express.json());
 app.use("/", routes);
 app.use(errors);
-db.sync({}).then(() => {
+db.sync({alter:true}).then(() => {
   console.log("Database Recreated");
 });

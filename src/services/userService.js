@@ -2,7 +2,7 @@ const UserRepository = require("../repositories/userRepo");
 const messageConstant = require("../constant/messageConstant");
 const { sendEmail } = require("./emailSevice");
 const crypto = require("node:crypto");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
 const { emailTemplate } = require("../templates/emailTemplate");
 const { loginTemplate } = require("../templates/loginTemplate");
 const {
@@ -60,16 +60,16 @@ class userService {
     if (!user)
       throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
     if (user.status === "BLOCK") {
-    throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
-  }
+      throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
+    }
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       const maxLimit = 5;
-      await user.increment('loginAttempts', {by:1});
+      await user.increment("loginAttempts", { by: 1 });
       await user.reload();
       if (user.loginAttempts >= maxLimit) {
         // Block the user
-        await user.update({status: "BLOCK"})
+        await user.update({ status: "BLOCK" });
         const htmlContent = blockUserTemplate(user.firstName, user.email);
         try {
           await sendEmail(
@@ -83,7 +83,9 @@ class userService {
         throw new Error(messageConstant.TOO_MANY_ATTEMPTS);
       } else {
         const remainingAttemptCount = maxLimit - user.loginAttempts;
-        throw new Error(messageConstant.INCORRECT_PASSWORD(remainingAttemptCount));
+        throw new Error(
+          messageConstant.INCORRECT_PASSWORD(remainingAttemptCount),
+        );
       }
     } else {
       // Reset attempts back to 0 on successful login
@@ -97,11 +99,9 @@ class userService {
         expires: Date.now() + 300000,
       };
 
-      const tempToken = jwt.sign(
-            { email, otp }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: '5m' }
-        );
+      const tempToken = jwt.sign({ email, otp }, process.env.JWT_SECRET, {
+        expiresIn: "5m",
+      });
 
       const htmlContent = loginTemplate(user.firstName, user.email, otp);
       await sendEmail(
@@ -109,25 +109,25 @@ class userService {
         messageConstant.USER_LOGIN_SUCCESSFULLY,
         htmlContent,
       );
-    
-    return tempToken;
+
+      return tempToken;
     }
   }
 
   //VerifyOTP
   async verifyOtp({ otp, token }) {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);  
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     if (String(decoded.otp) !== String(otp).trim()) {
-        throw new Error(messageConstant.INVALID_EXPIRE_OTP);
-        }
-  await UserRepository.verifyOtp(decoded.email);
+      throw new Error(messageConstant.INVALID_EXPIRE_OTP);
+    }
+    await UserRepository.verifyOtp(decoded.email);
     const accessToken = jwt.sign(
-            { email: decoded.email }, 
-            process.env.JWT_SECRET, 
-            { expiresIn: '24h' }
-        );
-        return { verified: true };
-  }  
+      { email: decoded.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" },
+    );
+    return { verified: true };
+  }
   //GetUserById
   async getUserById(id) {
     if (!id) {
@@ -141,11 +141,8 @@ class userService {
   }
   //UpdateUserById
   async updateUserById(id, data) {
-    if (!id) {
-      throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
-    }
-    if (!data || Object.keys(data).length === 0) {
-      throw new InvalidRequestException(messageConstant.INVALID_REQUEST);
+    if (!id || !data || Object.keys(data).length === 0) {
+      InvalidRequestException(messageConstant.INVALID_REQUEST);
     }
     const result = updateUserSchema.safeParse(data);
     if (!result.success) {

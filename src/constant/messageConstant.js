@@ -23,7 +23,7 @@ const messageConstant = {
   //EXCEPTION
   INVALID_REQUEST: "Invalid request",
   NOT_FOUND: "Not found",
-  USER_NOT_FOUND: "user not found",
+  USER_NOT_FOUND: "User not found",
   UNAUTHORIZED: "Unauthorized",
   INTERNAL_SERVER_ERROR: "Internal server error",
   USER_DOES_NOT_EXIST_WITH_THIS_EMAIL: "User does not exist with this email",

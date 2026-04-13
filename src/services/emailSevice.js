@@ -10,11 +10,6 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS  // app password (not normal password)
   }
 });
-// const otpStore={};
-// otpStore[] = {
-//         otp: otp,
-//         expires: Date.now() + 300000 
-//     };
 // 2. Send Email Function
 const sendEmail = async (to, subject, html) => {
   try {
